@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class NoteEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -27,7 +27,7 @@ public class NoteEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private UserEntity user;
+    private AccountEntity user;
 
     public Long getId() {
         return id;
@@ -53,11 +53,11 @@ public class NoteEntity {
         this.text = text;
     }
 
-    public UserEntity getUser() {
+    public AccountEntity getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(AccountEntity user) {
         this.user = user;
     }
 }

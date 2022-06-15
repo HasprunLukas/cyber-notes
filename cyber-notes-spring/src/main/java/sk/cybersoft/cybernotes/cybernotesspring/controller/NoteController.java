@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.cybersoft.cybernotes.cybernotesspring.entity.NoteEntity;
-import sk.cybersoft.cybernotes.cybernotesspring.entity.UserEntity;
+import sk.cybersoft.cybernotes.cybernotesspring.entity.AccountEntity;
 import sk.cybersoft.cybernotes.cybernotesspring.exception.ResourceNotFoundException;
 import sk.cybersoft.cybernotes.cybernotesspring.repository.NoteRepository;
 import sk.cybersoft.cybernotes.cybernotesspring.repository.UserRepository;
@@ -35,7 +35,7 @@ public class NoteController {
 
     @PostMapping
     public ResponseEntity<NoteEntity> createNote(@Valid @RequestBody NoteEntity note) throws ResourceNotFoundException {
-        UserEntity user = userRepository.findById(note.getUser().getId())
+        AccountEntity user = userRepository.findById(note.getUser().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Note with id: " + note.getUser().getId() + " not found!"));
 
         note.setUser(user);
@@ -50,7 +50,7 @@ public class NoteController {
         NoteEntity noteToUpdate = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note with id: " + noteId + " not found!"));
 
-        UserEntity user = userRepository.findById(note.getUser().getId())
+        AccountEntity user = userRepository.findById(note.getUser().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with id: " + note.getUser().getId() + " not found!"));
 
         if(note.getTitle() != null && !note.getTitle().trim().isEmpty()) {

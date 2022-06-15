@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS NOTE (
                                 text CLOB,
                                 user_id LONG NOT NULL,
                                 CONSTRAINT fk_user_id FOREIGN KEY (user_id) references ACCOUNT (id)
-)
+);
