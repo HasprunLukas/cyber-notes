@@ -8,7 +8,7 @@ import sk.cybersoft.cybernotes.cybernotesspring.entity.NoteEntity;
 import sk.cybersoft.cybernotes.cybernotesspring.entity.AccountEntity;
 import sk.cybersoft.cybernotes.cybernotesspring.exception.ResourceNotFoundException;
 import sk.cybersoft.cybernotes.cybernotesspring.repository.NoteRepository;
-import sk.cybersoft.cybernotes.cybernotesspring.repository.UserRepository;
+import sk.cybersoft.cybernotes.cybernotesspring.repository.AccountRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,7 +19,7 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
     @Autowired
-    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @GetMapping
     public ResponseEntity<List<NoteEntity>> findAll() {
@@ -35,7 +35,7 @@ public class NoteController {
 
     @PostMapping
     public ResponseEntity<NoteEntity> createNote(@Valid @RequestBody NoteEntity note) throws ResourceNotFoundException {
-        AccountEntity user = userRepository.findById(note.getUser().getId())
+        AccountEntity user = accountRepository.findById(note.getUser().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Note with id: " + note.getUser().getId() + " not found!"));
 
         note.setUser(user);
@@ -50,7 +50,7 @@ public class NoteController {
         NoteEntity noteToUpdate = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note with id: " + noteId + " not found!"));
 
-        AccountEntity user = userRepository.findById(note.getUser().getId())
+        AccountEntity user = accountRepository.findById(note.getUser().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with id: " + note.getUser().getId() + " not found!"));
 
         if(note.getTitle() != null && !note.getTitle().trim().isEmpty()) {

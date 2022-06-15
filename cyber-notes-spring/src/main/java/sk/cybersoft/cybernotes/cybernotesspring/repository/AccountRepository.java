@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sk.cybersoft.cybernotes.cybernotesspring.entity.AccountEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<AccountEntity, Long> {
+public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
 }
