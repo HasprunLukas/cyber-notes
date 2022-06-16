@@ -22,7 +22,7 @@ public class AccountEntity {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
     private Set<NoteEntity> notes = new HashSet<>();
 
     public Long getId() {
@@ -59,5 +59,15 @@ public class AccountEntity {
         for(NoteEntity note : notes) {
             note.setUser(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AccountEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", notes=" + notes +
+                '}';
     }
 }

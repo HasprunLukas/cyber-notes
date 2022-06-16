@@ -24,7 +24,7 @@ public class NoteEntity {
     private String text;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private AccountEntity user;
@@ -59,5 +59,14 @@ public class NoteEntity {
 
     public void setUser(AccountEntity user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "NoteEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                '}';
     }
 }
