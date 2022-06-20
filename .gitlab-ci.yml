@@ -1,0 +1,9 @@
+image: maven:3-jdk-11
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - mvn clean install
