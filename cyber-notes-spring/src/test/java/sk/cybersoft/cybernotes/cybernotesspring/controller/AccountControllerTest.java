@@ -29,7 +29,7 @@ public class AccountControllerTest {
 
     @Test
     public void getByIdTest() {
-        Optional<AccountEntity> account = accountRepository.findById(5L);
+        Optional<AccountEntity> account = accountRepository.findById(0L);
         Assertions.assertTrue(account.isPresent(), "Account with id 0 should exist!");
         Assertions.assertEquals("0", account.get().getId().toString(), "Id should be 0!");
         Assertions.assertEquals("admin", account.get().getUsername(), "Username should be 'admin'!");
