@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.cybersoft.cybernotes.cybernotesspring.entity.AccountEntity;
+import sk.cybersoft.cybernotes.cybernotesspring.exception.AlreadyExistsException;
 import sk.cybersoft.cybernotes.cybernotesspring.exception.ResourceNotFoundException;
-import sk.cybersoft.cybernotes.cybernotesspring.repository.AccountRepository;
+import sk.cybersoft.cybernotes.cybernotesspring.service.AccountService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,49 +16,32 @@ import java.util.List;
 @RequestMapping("/account")
 public class AccountController {
     @Autowired
-    AccountRepository accountRepository;
+    AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<AccountEntity>> findAll() {
-        return new ResponseEntity<>(accountRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAllAccounts(), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AccountEntity> findById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
-        return new ResponseEntity<>(accountRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + userId + " not found!")), HttpStatus.OK);
+    public ResponseEntity<AccountEntity> findById(@PathVariable(value = "id") Long accountId) throws ResourceNotFoundException {
+        return new ResponseEntity<>(accountService.getAccountById(accountId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<AccountEntity> createUser(@Valid @RequestBody AccountEntity user) {
-        accountRepository.save(user);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<AccountEntity> createUser(@Valid @RequestBody AccountEntity account) throws AlreadyExistsException {
+        return new ResponseEntity<>(accountService.createAccount(account), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<AccountEntity> updateUser(@PathVariable(value = "id") Long userId,
-                                                    @Valid @RequestBody AccountEntity user) throws ResourceNotFoundException {
-        AccountEntity userToUpdate = accountRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + userId + " not found!"));
-
-        if(user.getUsername() != null && !user.getUsername().trim().isEmpty()) {
-            userToUpdate.setUsername(user.getUsername());
-        }
-        if(user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
-            userToUpdate.setPassword(user.getPassword());
-        }
-
-        return new ResponseEntity<>(accountRepository.save(userToUpdate), HttpStatus.OK);
+    public ResponseEntity<AccountEntity> updateUser(@PathVariable(value = "id") Long accountId,
+                                                    @Valid @RequestBody AccountEntity account) throws ResourceNotFoundException {
+        return new ResponseEntity<>(accountService.updateAccount(account, accountId), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<AccountEntity> deleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
-
-        AccountEntity user = accountRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + userId + " not found!"));
-        accountRepository.delete(user);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<String> deleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+        accountService.deleteAccount(userId);
+        return new ResponseEntity<>("User with id: '" + userId + "' successfully deleted!", HttpStatus.OK);
     }
 }
