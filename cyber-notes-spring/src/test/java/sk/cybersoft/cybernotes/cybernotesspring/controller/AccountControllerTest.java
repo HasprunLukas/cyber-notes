@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -31,7 +32,7 @@ public class AccountControllerTest {
     private final String url = "http://localhost:";
     @Test
     public void getAllAccountsTest() {
-        ResponseEntity<AccountEntity[]> listResponseEntity = restTemplate.getForEntity(url + "" + port + "/account", AccountEntity[].class);
+        ResponseEntity<AccountEntity[]> listResponseEntity = restTemplate.exchange(url + "" + port + "/account", HttpMethod.GET, null, AccountEntity[].class);
         List<AccountEntity> accountEntities = Arrays.asList(Objects.requireNonNull(listResponseEntity.getBody()));
         Assertions.assertEquals(3, accountEntities.size(), "There should be 3 accounts!");
     }
@@ -39,7 +40,7 @@ public class AccountControllerTest {
     @Test
     public void getAccountByIdTest() {
         int accountId = 1;
-        ResponseEntity<AccountEntity> responseEntity = restTemplate.getForEntity(url + "" + port + "/account/" + accountId, AccountEntity.class);
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.exchange(url + "" + port + "/account/" + accountId, HttpMethod.GET, null, AccountEntity.class);
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
             responseEntity = null;
         }
@@ -52,14 +53,34 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createNewAccount() {
+    public void createNewAccountTest() {
         AccountEntity account = new AccountEntity();
         account.setUsername("testNew");
         account.setPassword("testNew");
 
         HttpEntity<AccountEntity> request = new HttpEntity<>(account, null);
 
-        ResponseEntity<AccountEntity> responseEntity = restTemplate.postForEntity(url + "" + port + "/account", request, AccountEntity.class);
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.exchange(url + "" + port + "/account", HttpMethod.POST, request, AccountEntity.class);
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void updateAccountTest() {
+        int accountId = 2;
+        AccountEntity account = new AccountEntity();
+        account.setUsername("testNew");
+
+        HttpEntity<AccountEntity> request = new HttpEntity<>(account, null);
+
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.exchange(url + "" + port + "/account/" + accountId, HttpMethod.PUT, request, AccountEntity.class);
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assertions.assertEquals("testNew", Objects.requireNonNull(responseEntity.getBody()).getUsername(), "Username should be 'testNew'!");
+    }
+
+    @Test
+    public void deleteAccountTest() {
+        int accountId = 1;
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "" + port + "/account/" + accountId, HttpMethod.DELETE, null, String.class);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }
