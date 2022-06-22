@@ -1,3 +1,6 @@
+DROP TABLE NOTE IF EXISTS;
+DROP TABLE ACCOUNT IF EXISTS;
+
 CREATE TABLE IF NOT EXISTS ACCOUNT (
                                 id LONG AUTO_INCREMENT PRIMARY KEY,
                                 username VARCHAR(255) UNIQUE NOT NULL,

@@ -20,6 +20,7 @@ import java.util.Objects;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CyberNotesSpringApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// TODO mock data, don't use sql!!
 @Sql(scripts = {"/schema-test.sql", "/data-test.sql"})
 public class AccountControllerTest {
     @Autowired

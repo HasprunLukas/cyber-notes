@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class NoteEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "note_seq")
     @Column(name = "id")
     private Long id;
 
