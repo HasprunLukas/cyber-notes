@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -38,7 +39,8 @@ public class AccountControllerTest {
 
     @Test
     public void getAccountByIdTest() {
-        ResponseEntity<AccountEntity> responseEntity = restTemplate.getForEntity(url + "" + port + "/account/0", AccountEntity.class);
+        int accountId = 1;
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.getForEntity(url + "" + port + "/account" + accountId, AccountEntity.class);
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
             responseEntity = null;
         }
@@ -48,5 +50,17 @@ public class AccountControllerTest {
         Assertions.assertEquals("admin", accountEntity.getUsername(), "Username should be 'admin'!");
         Assertions.assertEquals("admin", accountEntity.getPassword(), "Password should be 'admin'!");
         Assertions.assertEquals(2, accountEntity.getNotes().size(), "Account should have 2 notes!");
+    }
+
+    @Test
+    public void createNewAccount() {
+        AccountEntity account = new AccountEntity();
+        account.setUsername("testNew");
+        account.setPassword("testNew");
+
+        HttpEntity<AccountEntity> request = new HttpEntity<>(account, null);
+
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.postForEntity(url + "" + port + "/account", request, AccountEntity.class);
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }
