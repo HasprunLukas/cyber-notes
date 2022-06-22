@@ -29,9 +29,10 @@ public class NoteControllerTest {
 
     @Test
     public void getByIdTest() {
-        Optional<NoteEntity> note = noteRepository.findById(0L);
-        Assertions.assertTrue(note.isPresent(), "Note with id 0 should exist!");
-        Assertions.assertEquals("0", note.get().getId().toString(), "Id should be 0!");
+        Long noteId = 1L;
+        Optional<NoteEntity> note = noteRepository.findById(noteId);
+        Assertions.assertTrue(note.isPresent(), "Note with id 1 should exist!");
+        Assertions.assertEquals("1", note.get().getId().toString(), "Id should be 0!");
         Assertions.assertEquals("nazov1", note.get().getTitle(), "Title should be 'nazov1'!");
         Assertions.assertEquals("text1", note.get().getText(), "Text should be 'text1'!");
     }

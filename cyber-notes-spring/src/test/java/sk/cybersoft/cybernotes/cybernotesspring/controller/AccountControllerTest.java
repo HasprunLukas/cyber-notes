@@ -39,7 +39,7 @@ public class AccountControllerTest {
     @Test
     public void getAccountByIdTest() {
         int accountId = 1;
-        ResponseEntity<AccountEntity> responseEntity = restTemplate.getForEntity(url + "" + port + "/account" + accountId, AccountEntity.class);
+        ResponseEntity<AccountEntity> responseEntity = restTemplate.getForEntity(url + "" + port + "/account/" + accountId, AccountEntity.class);
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
             responseEntity = null;
         }
